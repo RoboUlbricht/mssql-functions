@@ -3,9 +3,8 @@
 var Connection = require('tedious').Connection;
 var Types = require('tedious').TYPES;
 var Request = require('tedious').Request;
-var fs = require('fs');
 
-/* Vzorovy obsah suboru vyvojarskej databazy
+/* Example of config - See the Tedious documentation
 {
   "userName": "***",
   "password": "***",
@@ -17,22 +16,19 @@ var fs = require('fs');
 }
 */
 
-module.exports = class TDatabaza {
+module.exports = class TDatabase {
 
   constructor(config) {
-    if(config)
-      this.config = config;
-    else {
-    var path = __dirname + '/config/db.json';
-    var content = fs.readFileSync(path);
-    this.config = JSON.parse(content);
-    }
+    this.config = config;
   }
 
   get types() {
-        return Types;
-    }
+    return Types;
+  }
 
+  ///
+  /// Connect to the database
+  ///
   connect() {
     var self = this;
     return new Promise(function(resolve, reject) {
@@ -47,6 +43,9 @@ module.exports = class TDatabaza {
     });
   }
 
+  ///
+  /// Run the query
+  ///
   query(sql) {
     var self = this;
     var rows = [];
@@ -71,6 +70,9 @@ module.exports = class TDatabaza {
     });
   }
 
+  ///
+  /// Run the execute
+  ///
   execute(sql, params) {
     var self = this;
     var count = 0;
@@ -92,6 +94,9 @@ module.exports = class TDatabaza {
     });
   }
 
+  ///
+  /// Get last identity
+  ///
   identity() {
     var sql = 'select @@identity';
     var self = this;
@@ -114,6 +119,9 @@ module.exports = class TDatabaza {
     });
   }
 
+  ///
+  /// Run batch
+  ///
   batchsql(commands) {
     var res = [];
     var self = this;
