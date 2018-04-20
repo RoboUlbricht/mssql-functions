@@ -27,7 +27,6 @@ var db = new Database(connection_string);
 db.connect()
     .then(function() {
         console.log('connected');
-        db.disconnect();
     })
     .catch(function(error) {
         console.log(error.message);
@@ -40,6 +39,40 @@ db.connect()
 ### Function: identity
 
 ### Function: batchsql
+```javascript
+var Database = require('mssql-functions');
+
+var connection_string = {
+  userName: "***",
+  password: "***",
+  server: "***",
+  options: {
+    database: "***",
+    instanceName: "***"
+  }
+}
+
+var db = new Database(connection_string);
+db.connect()
+    .then(function() {
+      console.log('connected');
+      var cmd = [
+        'insert into externe_logovanie(projekt, datum, log, level) values (\'batch1\', getdate(), \'1\', 1)',
+        'error sql',
+        'insert into externe_logovanie(projekt, datum, log, level) values (\'batch1\', getdate(), \'3\', 1)'
+      ];
+      db.batchsql(cmd)
+        .then(function(res) {
+          console.log('batch result', res);
+        })
+        .catch(function(err) {
+          console.log('error', err.message);
+        });
+    })
+    .catch(function(error) {
+        console.log(error.message);
+    });
+```
 
 ### Function: beginTransaction
 
