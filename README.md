@@ -11,6 +11,8 @@ npm install roboulbricht/mssql-functions
 ## class TDatabase
 
 ### Function: connect()
+Establishing the connection to the database.
+
 ```javascript
 var Database = require('mssql-functions');
 
@@ -34,12 +36,17 @@ db.connect()
     });
 ```
 ### Function: query()
+Execute the query which returns the result table.
 
 ### Function: execute()
+Execute the query without returning the result table. Good for insert queries.
 
 ### Function: identity()
+Return the last identity from previous execute.
 
 ### Function: batchsql()
+Batch execute.
+
 ```javascript
 var Database = require('mssql-functions');
 
@@ -76,10 +83,13 @@ db.connect()
 ```
 
 ### Function: beginTransaction()
+Begin the transaction.
 
 ### Function: commitTransaction()
+Commit the transaction.
 
 ### Function: rollbackTransaction()
+Rollback the transaction.
 
 ## todo
  - Write examples
