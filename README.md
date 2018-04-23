@@ -1,5 +1,6 @@
 # mssql-functions
-Wrapper for tedious.
+A simple wrapper for [tedious](https://github.com/tediousjs/tedious) (Node TDS module for connecting to SQL Server databases).
+All functions are Promises.
 
 ## Installation
 
@@ -9,7 +10,7 @@ npm install roboulbricht/mssql-functions
 
 ## class TDatabase
 
-### Function: connect
+### Function: connect()
 ```javascript
 var Database = require('mssql-functions');
 
@@ -32,13 +33,13 @@ db.connect()
         console.log(error.message);
     });
 ```
-### Function: query
+### Function: query()
 
-### Function: execute
+### Function: execute()
 
-### Function: identity
+### Function: identity()
 
-### Function: batchsql
+### Function: batchsql()
 ```javascript
 var Database = require('mssql-functions');
 
@@ -74,12 +75,11 @@ db.connect()
     });
 ```
 
-### Function: beginTransaction
+### Function: beginTransaction()
 
-### Function: commitTransaction
+### Function: commitTransaction()
 
-### Function: rollbackTransaction
+### Function: rollbackTransaction()
 
 ## todo
- - Port from existing project
  - Write examples
