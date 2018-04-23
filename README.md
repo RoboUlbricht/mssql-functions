@@ -10,6 +10,10 @@ npm install roboulbricht/mssql-functions
 
 ## class TDatabase
 
+### Function: constructor(config)
+
+### Property: types
+
 ### Function: connect()
 Establishing the connection to the database.
 
@@ -35,16 +39,16 @@ db.connect()
         console.log(error.message);
     });
 ```
-### Function: query()
+### Function: query(sql)
 Execute the query which returns the result table.
 
-### Function: execute()
+### Function: execute(sql, params)
 Execute the query without returning the result table. Good for insert queries.
 
 ### Function: identity()
 Return the last identity from previous execute.
 
-### Function: batchsql()
+### Function: batchsql(commands)
 Batch execute.
 
 ```javascript
