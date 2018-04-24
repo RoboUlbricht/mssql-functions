@@ -49,6 +49,12 @@ Execute the query which returns the result table.
 ### Function: execute(sql, params)
 Execute the query without returning the result table. Good for insert queries.
 
+### Function: executeInt(sql, id)
+Execute the query without returning the result table with one integer parameter. Always use @id as parameter in SQL.
+```javascript
+db.executeInt('delete from #pokus where id=@id', 1);
+```
+
 ### Function: executeBatch(sql)
 Execute the query without returning the result table. There is no param support, but it is the only way to create temporary tables.
 See the original [documentation](http://tediousjs.github.io/tedious/api-connection.html#function_execSqlBatch).

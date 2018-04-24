@@ -95,6 +95,31 @@ module.exports = class TDatabase {
   }
 
   ///
+  /// Run the execute with one integer parameter
+  ///
+  /// Use it in the form executeInt('select * from tbl where id_primary=@id', 1)
+  ///
+  executeInt(sql, id) {
+    var self = this;
+    var count = 0;
+    return new Promise(function(resolve, reject) {
+      var request = new Request(sql, function(err, rowCount) {
+        if(err)
+          reject(err);
+        else
+          count = rowCount;
+      });
+
+      request.on('requestCompleted', function() {
+        resolve(count);
+      })
+
+      request.addParameter('id', Types.Int, id);
+      self.connection.execSql(request);
+    });
+  }
+
+  ///
   /// Run the execute for special cases
   /// There is no param support, but it is the only way to create temporary tables.
   ///
