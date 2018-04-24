@@ -95,6 +95,29 @@ module.exports = class TDatabase {
   }
 
   ///
+  /// Run the execute for special cases
+  /// There is no param support, but it is the only way to create temporary tables.
+  ///
+  executeBatch(sql) {
+    var self = this;
+    var count = 0;
+    return new Promise(function(resolve, reject) {
+      var request = new Request(sql, function(err, rowCount) {
+        if(err)
+          reject(err);
+        else
+          count = rowCount;
+      });
+
+      request.on('requestCompleted', function() {
+        resolve(count);
+      })
+
+      self.connection.execSqlBatch(request);
+    });
+  }
+
+  ///
   /// Get last identity
   ///
   identity() {

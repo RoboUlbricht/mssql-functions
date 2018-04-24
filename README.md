@@ -49,6 +49,47 @@ Execute the query which returns the result table.
 ### Function: execute(sql, params)
 Execute the query without returning the result table. Good for insert queries.
 
+### Function: executeBatch(sql)
+Execute the query without returning the result table. There is no param support, but it is the only way to create temporary tables.
+See the original [documentation](http://tediousjs.github.io/tedious/api-connection.html#function_execSqlBatch).
+```javascript
+var Database = require('mssql-functions');
+
+var connection_string = {
+  userName: "***",
+  password: "***",
+  server: "***",
+  options: {
+    database: "***",
+    instanceName: "***"
+  }
+}
+
+db.connect()
+  .then(async function() {
+    console.log('connected');
+    try {
+    await db.beginTransaction();
+    console.log('in transaction');
+
+    await db.executeBatch('create table #pokus(id int, name varchar(255))');
+    await db.execute('insert into #pokus(id,name) values (1, \'one\')');
+    await db.execute('insert into #pokus(id,name) values (2, \'two\')');
+    var t = await db.query('select * from #pokus');
+    console.log(t);
+
+    await db.commitTransaction();
+    console.log('commit');
+    } catch(error) {
+      await db.rollbackTransaction();
+      console.log('error in transaction', error.message);
+    }
+  })
+  .catch(function(err) {
+    console.log('error', err.message);
+  });
+```
+
 ### Function: identity()
 Return the last identity from previous execute.
 
