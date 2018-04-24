@@ -3,7 +3,11 @@ A simple wrapper for [tedious](https://github.com/tediousjs/tedious) (Node TDS m
 All functions are Promises.
 
 ## Installation
-
+From npm.
+```
+npm install mssql-functions
+```
+Or from git.
 ```
 npm install roboulbricht/mssql-functions
 ```
