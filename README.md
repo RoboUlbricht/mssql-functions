@@ -133,6 +133,39 @@ db.connect()
 
 ### Function: beginTransaction()
 Begin the transaction.
+```javascript
+var Database = require('mssql-functions');
+
+var connection_string = {
+  userName: "***",
+  password: "***",
+  server: "***",
+  options: {
+    database: "***",
+    instanceName: "***"
+  }
+}
+
+db.connect()
+  .then(async function() {
+    console.log('connected');
+    try {
+    await db.beginTransaction();
+    console.log('in transaction');
+
+    await db.execute('insert into #pokus(id,name) values (1, \'one\')');
+
+    await db.commitTransaction();
+    console.log('commit');
+    } catch(error) {
+      await db.rollbackTransaction();
+      console.log('error in transaction', error.message);
+    }
+  })
+  .catch(function(err) {
+    console.log('error', err.message);
+  });
+```
 
 ### Function: commitTransaction()
 Commit the transaction.
