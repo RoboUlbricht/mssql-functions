@@ -46,7 +46,7 @@ module.exports = class TDatabase {
   ///
   /// Run the query
   ///
-  query(sql) {
+  query(sql, params) {
     var self = this;
     var rows = [];
     return new Promise(function(resolve, reject) {
@@ -66,6 +66,37 @@ module.exports = class TDatabase {
         rows.push(row);
       });
 
+      params.forEach((param) => request.addParameter(...param));
+      self.connection.execSql(request);
+    });
+  }
+
+  ///
+  /// Run the query with one integer parameter
+  ///
+  /// Use it in the form queryInt('select * from tbl where id_primary=@id', 1)
+  ///
+  queryInt(sql, id) {
+    var self = this;
+    var rows = [];
+    return new Promise(function(resolve, reject) {
+      var request = new Request(sql, function(err, rowCount) {
+        if(err)
+          reject(err);
+        else {
+          resolve(rows);
+        }
+      });
+
+      request.on('row', function(columns) {
+        var row = {}
+        columns.forEach(function(column) {
+          row[column.metadata.colName] = column.value
+        });
+        rows.push(row);
+      });
+
+      request.addParameter('id', Types.Int, id);
       self.connection.execSql(request);
     });
   }
@@ -97,7 +128,7 @@ module.exports = class TDatabase {
   ///
   /// Run the execute with one integer parameter
   ///
-  /// Use it in the form executeInt('select * from tbl where id_primary=@id', 1)
+  /// Use it in the form executeInt('delete from tbl where id_primary=@id', 1)
   ///
   executeInt(sql, id) {
     var self = this;

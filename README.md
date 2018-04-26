@@ -43,14 +43,47 @@ db.connect()
         console.log(error.message);
     });
 ```
-### Function: query(sql)
+### Function: query(sql, params)
 Execute the query which returns the result table.
+ * `sql` {String} The SQL statement to be executed.
+ * `params` {Array[]} An array of arrays containing the parameter definitions.
+
+```javascript
+var t = await db.query('select * from #pokus');
+console.log(t);
+var t = await db.query('select * from #pokus where id=@id', [
+  ['id', db.types.Int, 2]
+]);
+console.log(t);
+```
+
+### Function: queryInt(sql, id)
+Execute the query which returns the result table with one integer parameter. Always use @id as parameter in SQL.
+ * `sql` {String} The SQL statement to be executed.
+ * `id` {Int} An integer number.
+
+```javascript
+var t = await db.queryInt('select * from #pokus where id=@id', 2);
+```
 
 ### Function: execute(sql, params)
 Execute the query without returning the result table. Good for insert queries.
+ * `sql` {String} The SQL statement to be executed.
+ * `params` {Array[]} An array of arrays containing the parameter definitions.
+
+```javascript
+await db.execute('insert into #pokus(id,name) values (1, \'one\')');
+await db.execute('insert into #pokus(id,name) values (@id, @name)', [
+  ['id', db.types.Int, 2],
+  ['name', db.types.VarChar, 'two']
+]);
+```
 
 ### Function: executeInt(sql, id)
 Execute the query without returning the result table with one integer parameter. Always use @id as parameter in SQL.
+ * `sql` {String} The SQL statement to be executed.
+ * `id` {Int} An integer number.
+
 ```javascript
 db.executeInt('delete from #pokus where id=@id', 1);
 ```
@@ -97,7 +130,7 @@ db.connect()
 ```
 
 ### Function: identity()
-Return the last identity from previous execute.
+Return the last identity from previous function execute.
 
 ### Function: batchsql(commands)
 Batch execute.
