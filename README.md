@@ -17,6 +17,7 @@ npm install roboulbricht/mssql-functions
 ### Function: constructor(config)
 
 ### Property: types
+Returns tedious [TYPES](https://tediousjs.github.io/tedious/api-datatypes.html).
 
 ### Function: connect()
 Establishing the connection to the database.
