@@ -66,7 +66,8 @@ module.exports = class TDatabase {
         rows.push(row);
       });
 
-      params.forEach((param) => request.addParameter(...param));
+      if(params)
+        params.forEach((param) => request.addParameter(...param));
       self.connection.execSql(request);
     });
   }
@@ -120,7 +121,8 @@ module.exports = class TDatabase {
         resolve(count);
       })
 
-      params.forEach((param) => request.addParameter(...param));
+      if(params)
+        params.forEach((param) => request.addParameter(...param));
       self.connection.execSql(request);
     });
   }
