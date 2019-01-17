@@ -59,3 +59,4 @@ typings/
 
 # Private tests
 private-tests/
+.vscode/launch.json

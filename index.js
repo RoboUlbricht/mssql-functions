@@ -44,6 +44,16 @@ module.exports = class TDatabase {
   }
 
   ///
+  /// Disconnect the database
+  ///
+  disconnect() {
+    if(this.connection) {
+      this.connection.close();
+      this.connection = undefined;
+    }
+  }
+
+  ///
   /// Run the query
   ///
   query(sql, params) {
