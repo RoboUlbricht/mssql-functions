@@ -48,18 +48,22 @@ db.connect()
 ### Function: disconnect()
 Close the connection to the database.
 
-### Function: query(sql, params)
+### Function: query(sql, params, config)
 Execute the query which returns the result table.
  * `sql` {String} The SQL statement to be executed.
  * `params` {Array[]} An array of arrays containing the parameter definitions.
+ * `config` {Object}
+   * `columns` {true, false} Returns object with columns and rows.
 
 ```javascript
-var t = await db.query('select * from #pokus');
-console.log(t);
-var t = await db.query('select * from #pokus where id=@id', [
+var t1 = await db.query('select * from #pokus');
+console.log(t1);
+var t2 = await db.query('select * from #pokus where id=@id', [
   ['id', db.types.Int, 2]
 ]);
-console.log(t);
+console.log(t2);
+var t3 = await db.query('select * from #pokus', undefined, {columns: true});
+console.log(t3);
 ```
 
 ### Function: queryInt(sql, id)

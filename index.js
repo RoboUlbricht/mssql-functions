@@ -56,20 +56,41 @@ module.exports = class TDatabase {
   ///
   /// Run the query
   ///
-  query(sql, params) {
+  query(sql, params, config) {
     var self = this;
     var rows = [];
+    var cols = [];
     return new Promise(function(resolve, reject) {
       var request = new Request(sql, function(err, rowCount) {
         if(err)
           reject(err);
         else {
+          if(config && config.columns==true) {
+            resolve({
+              columns: cols,
+              rows: rows
+            });
+            return;
+          }
           resolve(rows);
         }
       });
 
+      request.on('columnMetadata', function (columns) {
+        cols = [];
+        columns.forEach(function(column) {
+          let col = {
+            colName: column.colName,
+            dataLength: column.dataLength,
+            type: column.type.id,
+            typeName: column.type.name
+          }
+          cols.push(col);
+        });
+      });
+
       request.on('row', function(columns) {
-        var row = {}
+        let row = {}
         columns.forEach(function(column) {
           row[column.metadata.colName] = column.value
         });
