@@ -44,6 +44,10 @@ db.connect()
         console.log(error.message);
     });
 ```
+
+### Function: disconnect()
+Close the connection to the database.
+
 ### Function: query(sql, params)
 Execute the query which returns the result table.
  * `sql` {String} The SQL statement to be executed.
