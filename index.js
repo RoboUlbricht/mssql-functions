@@ -19,6 +19,18 @@ var Request = require('tedious').Request;
 module.exports = class TDatabase {
 
   constructor(config) {
+    // check old config
+    if(config.authentication == undefined && config.userName && config.password) {
+      config.authentication = {
+        type: "default",
+        options: {
+          userName: config.userName,
+          password: config.password
+        }
+      };
+      delete config.userName;
+      delete config.password;
+    }
     this.config = config;
   }
 
@@ -30,11 +42,10 @@ module.exports = class TDatabase {
   /// Connect to the database
   ///
   connect() {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-      self.connection = new Connection(self.config);
+    return new Promise((resolve, reject) => {
+      this.connection = new Connection(this.config);
 
-      self.connection.on('connect', function(err) {
+      this.connection.on('connect', (err) => {
         if(err)
           reject(err);
         else
