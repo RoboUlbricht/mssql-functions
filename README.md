@@ -138,6 +138,45 @@ db.connect()
   });
 ```
 
+### Function: bulkLoad(table, options, columns, data)
+Bulk load data.
+```javascript
+var Database = require('mssql-functions');
+
+var connection_string = {
+  userName: "***",
+  password: "***",
+  server: "***",
+  options: {
+    database: "***",
+    instanceName: "***"
+  }
+}
+
+db.connect()
+  .then(async () => {
+    console.log('connected');
+    await db.executeInt('delete from osoby where firma_id=@id', 9999);
+
+    var options = { keepNulls: true };
+    var columns = [
+      ['firma_id', db.types.Int, { nullable: true }],
+      ['meno', db.types.NVarChar, { length: 50, nullable: true }],
+      ['priezvisko', db.types.NVarChar, { length: 50, nullable: true }]
+    ];
+    var data = [
+      { firma_id: 9999, meno: 'M1', priezvisko: 'P1' },
+      { firma_id: 9999, meno: 'M2', priezvisko: 'P2' }
+    ];
+    let res = await db.bulkLoad('osoby', options, columns, data);
+
+    db.disconnect();
+  })
+  .catch(function(err) {
+    console.log('error', err.message);
+  });
+```
+
 ### Function: identity()
 Return the last identity from previous function execute.
 

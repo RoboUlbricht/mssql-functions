@@ -218,6 +218,24 @@ module.exports = class TDatabase {
   }
 
   ///
+  /// Bulk Load
+  ///
+  bulkLoad(table, options, columns, data) {
+    return new Promise((resolve, reject) => {
+      var bulkLoad = this.connection.newBulkLoad(table, options, (error, rowCount) => {
+        if(error)
+          reject(error);
+        else
+          resolve(rowCount);
+      });
+
+      columns.forEach((col) => bulkLoad.addColumn(...col));
+      data.forEach((row) => bulkLoad.addRow(row));
+      this.connection.execBulkLoad(bulkLoad);
+    });
+  }
+
+  ///
   /// Get last identity
   ///
   identity() {
