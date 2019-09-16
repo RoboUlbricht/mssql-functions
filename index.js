@@ -145,6 +145,36 @@ module.exports = class TDatabase {
   }
 
   ///
+  /// Run the query with low memory
+  ///
+  queryLM(sql, params, rowfunc) {
+    var self = this;
+    return new Promise((resolve, reject) => {
+      if(typeof(rowfunc) !== 'function')
+        reject(new Error('Parameter rowfunc must be a function.'));
+      var request = new Request(sql, (err, rowCount) => {
+        if(err)
+          reject(err);
+        else {
+          resolve(rowCount);
+        }
+      });
+
+      request.on('row', (columns) => {
+        let row = {}
+        columns.forEach((column) => {
+          row[column.metadata.colName] = column.value
+        });
+        rowfunc(row);
+      });
+
+      if(params)
+        params.forEach((param) => request.addParameter(...param));
+      self.connection.execSql(request);
+    });
+  }
+
+  ///
   /// Run the execute
   ///
   execute(sql, params) {

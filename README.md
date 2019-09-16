@@ -75,6 +75,18 @@ Execute the query which returns the result table with one integer parameter. Alw
 var t = await db.queryInt('select * from #pokus where id=@id', 2);
 ```
 
+### Function: queryLM(sql, params, rowfunc)
+Execute the query in low memory mode.
+ * `sql` {String} The SQL statement to be executed.
+ * `params` {Array[]} An array of arrays containing the parameter definitions.
+ * `rowfunc` {Function(row)} Callback
+
+```javascript
+var t = await db.queryLM('select * from uzivatelia', undefined, (row) => {
+  console.log(row);
+});
+```
+
 ### Function: execute(sql, params)
 Execute the query without returning the result table. Good for insert queries.
  * `sql` {String} The SQL statement to be executed.
