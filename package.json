@@ -1,6 +1,6 @@
 {
   "name": "mssql-functions",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Wrapper for tedious (Node TDS module for connecting to SQL Server databases). All functions are Promises.",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/roboulbricht/mssql-functions#readme",
   "dependencies": {
-    "tedious": "^6.2.0"
+    "tedious": "^8.0.1"
+  },
+  "devDependencies": {
+    "winston": "^3.2.1"
   }
 }

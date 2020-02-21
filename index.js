@@ -18,7 +18,7 @@ var Request = require('tedious').Request;
 
 module.exports = class TDatabase {
 
-  constructor(config) {
+  constructor(config, params) {
     // check old config
     if(config.authentication == undefined && config.userName && config.password) {
       config.authentication = {
@@ -32,6 +32,7 @@ module.exports = class TDatabase {
       delete config.password;
     }
     this.config = config;
+    this.params = params;
   }
 
   get types() {
@@ -46,10 +47,16 @@ module.exports = class TDatabase {
       this.connection = new Connection(this.config);
 
       this.connection.on('connect', (err) => {
-        if(err)
+        if(err) {
+          if(this.params && this.params.logger)
+            this.params.logger.error(err.message);
           reject(err);
-        else
+        }
+        else {
+          if(this.params && this.params.logger)
+            this.params.logger.info('TDatabase.Connected');
           resolve();
+        }
       });
     });
   }
@@ -68,14 +75,25 @@ module.exports = class TDatabase {
   /// Run the query
   ///
   query(sql, params, config) {
-    var self = this;
     var rows = [];
     var cols = [];
-    return new Promise(function(resolve, reject) {
-      var request = new Request(sql, function(err, rowCount) {
-        if(err)
+    if(this.params && this.params.logger) {
+      this.params.logger.debug('TDatabase.query: ' + sql);
+      params.forEach((param) => this.params.logger.debug(` - ${param[0]}: ${param[2]}`));
+    }
+    return new Promise((resolve, reject) => {
+      let hrstart = process.hrtime();
+      var request = new Request(sql, (err, rowCount) => {
+        if(err) {
+          if(this.params && this.params.logger)
+          this.params.logger.error(err.message);
           reject(err);
+        }
         else {
+          let hrend = process.hrtime(hrstart);
+          if(this.params && this.params.logger)
+          this.params.logger.debug(`Count: ${rowCount}, (${hrend[0]}s ${hrend[1] / 1000000 | 0}ms)`);
+
           if(config && config.columns==true) {
             resolve({
               columns: cols,
@@ -87,9 +105,9 @@ module.exports = class TDatabase {
         }
       });
 
-      request.on('columnMetadata', function (columns) {
+      request.on('columnMetadata', (columns) => {
         cols = [];
-        columns.forEach(function(column) {
+        columns.forEach((column) => {
           let col = {
             colName: column.colName,
             dataLength: column.dataLength,
@@ -100,9 +118,9 @@ module.exports = class TDatabase {
         });
       });
 
-      request.on('row', function(columns) {
+      request.on('row', (columns) => {
         let row = {}
-        columns.forEach(function(column) {
+        columns.forEach((column) => {
           row[column.metadata.colName] = column.value
         });
         rows.push(row);
@@ -110,7 +128,7 @@ module.exports = class TDatabase {
 
       if(params)
         params.forEach((param) => request.addParameter(...param));
-      self.connection.execSql(request);
+      this.connection.execSql(request);
     });
   }
 
