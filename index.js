@@ -63,6 +63,11 @@ module.exports = class TDatabase {
           resolve();
         }
       });
+
+      this.connection.on('end', () => {
+        if(this.params && this.params.logger)
+          this.params.logger.info('TDatabase.Disconnected');
+      });
     });
   }
 
