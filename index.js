@@ -346,13 +346,15 @@ module.exports = class TDatabase {
   /// Start of a transaction
   ///
   beginTransaction() {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-      self.connection.beginTransaction(function(err) {
+    return new Promise((resolve, reject) => {
+      this.connection.beginTransaction((err) => {
         if(err)
           reject(err);
-        else
+        else {
+          if(this.params && this.params.logger)
+            this.params.logger.info('TDatabase.beginTransaction');
           resolve();
+        }
       });
     });
   }
@@ -361,14 +363,16 @@ module.exports = class TDatabase {
   /// Commit of a transaction
   ///
   commitTransaction() {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-      self.connection.commitTransaction(function(err) {
+    return new Promise((resolve, reject) => {
+      this.connection.beginTransaction((err) => {
         if(err)
           reject(err);
-        else
-          resolve();
-      });
+          else {
+            if(this.params && this.params.logger)
+              this.params.logger.info('TDatabase.commitTransaction');
+            resolve();
+          }
+        });
     });
   }
 
@@ -376,14 +380,16 @@ module.exports = class TDatabase {
   /// Rollback of a transaction
   ///
   rollbackTransaction() {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-      self.connection.rollbackTransaction(function(err) {
+    return new Promise((resolve, reject) => {
+      this.connection.beginTransaction((err) => {
         if(err)
           reject(err);
-        else
-          resolve();
-      });
+          else {
+            if(this.params && this.params.logger)
+              this.params.logger.info('TDatabase.rollbackTransaction');
+            resolve();
+          }
+        });
     });
   }
 
