@@ -49,6 +49,7 @@ module.exports = class TDatabase {
   connect() {
     return new Promise((resolve, reject) => {
       this.connection = new Connection(this.config);
+      this.connection.connect();
 
       this.connection.on('connect', (err) => {
         if(err) {
