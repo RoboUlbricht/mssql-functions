@@ -32,6 +32,10 @@ module.exports = class TDatabase {
       delete config.password;
     }
     this.config = config;
+    if(this.config.options==undefined)
+      this.config.options = {};
+    if(this.config.options.trustServerCertificate==undefined)
+      this.config.options.trustServerCertificate = true;
     this.params = params;
   }
 
@@ -206,24 +210,23 @@ module.exports = class TDatabase {
   /// Run the execute
   ///
   execute(sql, params) {
-    var self = this;
     var count = 0;
     params = params || [];
-    return new Promise(function(resolve, reject) {
-      var request = new Request(sql, function(err, rowCount) {
+    return new Promise((resolve, reject) => {
+      var request = new Request(sql, (err, rowCount) => {
         if(err)
           reject(err);
         else
           count = rowCount;
       });
 
-      request.on('requestCompleted', function() {
+      request.on('requestCompleted', () => {
         resolve(count);
       })
 
       if(params)
         params.forEach((param) => request.addParameter(...param));
-      self.connection.execSql(request);
+      this.connection.execSql(request);
     });
   }
 
