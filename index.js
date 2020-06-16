@@ -218,7 +218,12 @@ module.exports = class TDatabase {
   execute(sql, params) {
     var count = 0;
     params = params || [];
+    if(this.params && this.params.logger) {
+      this.params.logger.debug('TDatabase.execute: ' + sql);
+      params.forEach((param) => this.params.logger.debug(` - ${param[0]}: ${param[2]}`));
+    }
     return new Promise((resolve, reject) => {
+      let hrstart = process.hrtime();
       var request = new Request(sql, (err, rowCount) => {
         if(err)
           reject(err);
@@ -227,6 +232,9 @@ module.exports = class TDatabase {
       });
 
       request.on('requestCompleted', () => {
+        let hrend = process.hrtime(hrstart);
+        if(this.params && this.params.logger)
+          this.params.logger.debug(`Count: ${count}, (${hrend[0]}s ${hrend[1] / 1000000 | 0}ms)`);
         resolve(count);
       })
 
@@ -242,22 +250,29 @@ module.exports = class TDatabase {
   /// Use it in the form executeInt('delete from tbl where id_primary=@id', 1)
   ///
   executeInt(sql, id) {
-    var self = this;
+    if(this.params && this.params.logger) {
+      this.params.logger.debug('TDatabase.executeInt: ' + sql);
+      this.params.logger.debug(` - id: ${id}`);
+    }
     var count = 0;
-    return new Promise(function(resolve, reject) {
-      var request = new Request(sql, function(err, rowCount) {
+    return new Promise((resolve, reject) => {
+      let hrstart = process.hrtime();
+      var request = new Request(sql, (err, rowCount) => {
         if(err)
           reject(err);
         else
           count = rowCount;
       });
 
-      request.on('requestCompleted', function() {
+      request.on('requestCompleted', () => {
+        let hrend = process.hrtime(hrstart);
+        if(this.params && this.params.logger)
+          this.params.logger.debug(`Count: ${count}, (${hrend[0]}s ${hrend[1] / 1000000 | 0}ms)`);
         resolve(count);
       })
 
       request.addParameter('id', Types.Int, id);
-      self.connection.execSql(request);
+      this.connection.execSql(request);
     });
   }
 
