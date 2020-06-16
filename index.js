@@ -86,13 +86,13 @@ module.exports = class TDatabase {
       var request = new Request(sql, (err, rowCount) => {
         if(err) {
           if(this.params && this.params.logger)
-          this.params.logger.error(err.message);
+            this.params.logger.error(err.message);
           reject(err);
         }
         else {
           let hrend = process.hrtime(hrstart);
           if(this.params && this.params.logger)
-          this.params.logger.debug(`Count: ${rowCount}, (${hrend[0]}s ${hrend[1] / 1000000 | 0}ms)`);
+            this.params.logger.debug(`Count: ${rowCount}, (${hrend[0]}s ${hrend[1] / 1000000 | 0}ms)`);
 
           if(config && config.columns==true) {
             resolve({
@@ -138,27 +138,37 @@ module.exports = class TDatabase {
   /// Use it in the form queryInt('select * from tbl where id_primary=@id', 1)
   ///
   queryInt(sql, id) {
-    var self = this;
+    if(this.params && this.params.logger) {
+      this.params.logger.debug('TDatabase.queryInt: ' + sql);
+      this.params.logger.debug(` - id: ${id}`);
+    }
     var rows = [];
-    return new Promise(function(resolve, reject) {
-      var request = new Request(sql, function(err, rowCount) {
-        if(err)
+    return new Promise((resolve, reject) => {
+      let hrstart = process.hrtime();
+      var request = new Request(sql, (err, rowCount) => {
+        if(err) {
+          if(this.params && this.params.logger)
+            this.params.logger.error(err.message);
           reject(err);
+        }
         else {
+          let hrend = process.hrtime(hrstart);
+          if(this.params && this.params.logger)
+            this.params.logger.debug(`Count: ${rowCount}, (${hrend[0]}s ${hrend[1] / 1000000 | 0}ms)`);
           resolve(rows);
         }
       });
 
-      request.on('row', function(columns) {
+      request.on('row', (columns) => {
         var row = {}
-        columns.forEach(function(column) {
+        columns.forEach((column) => {
           row[column.metadata.colName] = column.value
         });
         rows.push(row);
       });
 
       request.addParameter('id', Types.Int, id);
-      self.connection.execSql(request);
+      this.connection.execSql(request);
     });
   }
 
