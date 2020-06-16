@@ -1,6 +1,6 @@
 {
   "name": "mssql-functions",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Wrapper for tedious (Node TDS module for connecting to SQL Server databases). All functions are Promises.",
   "main": "index.js",
   "scripts": {

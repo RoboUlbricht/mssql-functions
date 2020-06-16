@@ -89,7 +89,8 @@ module.exports = class TDatabase {
     var cols = [];
     if(this.params && this.params.logger) {
       this.params.logger.debug('TDatabase.query: ' + sql);
-      params.forEach((param) => this.params.logger.debug(` - ${param[0]}: ${param[2]}`));
+      if(params)
+        params.forEach((param) => this.params.logger.debug(` - ${param[0]}: ${param[2]}`));
     }
     return new Promise((resolve, reject) => {
       let hrstart = process.hrtime();
@@ -220,7 +221,8 @@ module.exports = class TDatabase {
     params = params || [];
     if(this.params && this.params.logger) {
       this.params.logger.debug('TDatabase.execute: ' + sql);
-      params.forEach((param) => this.params.logger.debug(` - ${param[0]}: ${param[2]}`));
+      if(params)
+        params.forEach((param) => this.params.logger.debug(` - ${param[0]}: ${param[2]}`));
     }
     return new Promise((resolve, reject) => {
       let hrstart = process.hrtime();
