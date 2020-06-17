@@ -400,7 +400,7 @@ module.exports = class TDatabase {
   ///
   commitTransaction() {
     return new Promise((resolve, reject) => {
-      this.connection.beginTransaction((err) => {
+      this.connection.commitTransaction((err) => {
         if(err)
           reject(err);
           else {
@@ -417,7 +417,7 @@ module.exports = class TDatabase {
   ///
   rollbackTransaction() {
     return new Promise((resolve, reject) => {
-      this.connection.beginTransaction((err) => {
+      this.connection.rollbackTransaction((err) => {
         if(err)
           reject(err);
           else {
