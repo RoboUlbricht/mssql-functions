@@ -26,8 +26,13 @@ Establishing the connection to the database.
 var Database = require('mssql-functions');
 
 var connection_string = {
-  userName: "***",
-  password: "***",
+  authentication: {
+    type: "default",
+    options: {
+      userName: "***",
+      password: "***",
+    }
+  },
   server: "***",
   options: {
     database: "***",
@@ -116,8 +121,13 @@ See the original [documentation](http://tediousjs.github.io/tedious/api-connecti
 var Database = require('mssql-functions');
 
 var connection_string = {
-  userName: "***",
-  password: "***",
+  authentication: {
+    type: "default",
+    options: {
+      userName: "***",
+      password: "***",
+    }
+  },
   server: "***",
   options: {
     database: "***",
@@ -199,8 +209,13 @@ Batch execute.
 var Database = require('mssql-functions');
 
 var connection_string = {
-  userName: "***",
-  password: "***",
+  authentication: {
+    type: "default",
+    options: {
+      userName: "***",
+      password: "***",
+    }
+  },
   server: "***",
   options: {
     database: "***",
@@ -236,8 +251,13 @@ Begin the transaction.
 var Database = require('mssql-functions');
 
 var connection_string = {
-  userName: "***",
-  password: "***",
+  authentication: {
+    type: "default",
+    options: {
+      userName: "***",
+      password: "***",
+    }
+  },
   server: "***",
   options: {
     database: "***",
