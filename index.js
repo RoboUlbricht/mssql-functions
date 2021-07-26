@@ -6,12 +6,17 @@ var Request = require('tedious').Request;
 
 /* Example of config - See the Tedious documentation
 {
-  "userName": "***",
-  "password": "***",
-  "server": "***",
-  "options": {
-    "database": "***",
-    "instanceName": "***"
+  authentication: {
+    type: "default",
+    options: {
+      userName: "***",
+      password: "***",
+    }
+  },
+  server: "***",
+  options: {
+    database: "***",
+    instanceName: "***"
   }
 }
 */
