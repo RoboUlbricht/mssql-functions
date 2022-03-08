@@ -21,6 +21,11 @@ var Request = require('tedious').Request;
 }
 */
 
+var pcounter = {
+  connected: 0,
+  disconnected: 0
+};
+
 module.exports = class TDatabase {
 
   constructor(config, params) {
@@ -63,15 +68,25 @@ module.exports = class TDatabase {
           reject(err);
         }
         else {
-          if(this.params && this.params.logger)
-            this.params.logger.info('TDatabase.Connected');
+          pcounter.connected++;
+          if(this.params && this.params.logger && this.params.connect) {
+            if(this.params.count)
+              this.params.logger.info(`TDatabase.Connected(${pcounter.connected})`);
+            else
+              this.params.logger.info('TDatabase.Connected');
+          }
           resolve();
         }
       });
 
       this.connection.on('end', () => {
-        if(this.params && this.params.logger)
-          this.params.logger.info('TDatabase.Disconnected');
+        pcounter.disconnected++;
+        if(this.params && this.params.logger && this.params.disconnect) {
+          if(this.params.count)
+            this.params.logger.info(`TDatabase.Disconnected(${pcounter.connected}/${pcounter.disconnected})`);
+          else
+            this.params.logger.info('TDatabase.Disconnected');
+        }
       });
     });
   }
