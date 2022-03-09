@@ -28,6 +28,16 @@ var pcounter = {
 
 module.exports = class TDatabase {
 
+  /**
+   * Constructor
+   * @param {Object} config
+   * @param {Object} params Definition of logger
+   * @param {Object} params.logger Logger class
+   * @param {boolean} params.connect Log database connect
+   * @param {boolean} params.disconnect Log database disconnect
+   * @param {boolean} params.count Show counters to see possible memory leaks
+   */
+
   constructor(config, params) {
     // check old config
     if(config.authentication == undefined && config.userName && config.password) {
