@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/roboulbricht/mssql-functions#readme",
   "dependencies": {
-    "tedious": "^11.8.0"
+    "tedious": "^15.1.2"
   },
   "devDependencies": {
     "winston": "^3.3.3"
